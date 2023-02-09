@@ -119,7 +119,28 @@ void printf_list_reverse(struct node *temp){
         tail=tail->left;
 
     }
-    
-
-
+}
+void delete_node(struct node *head,int index){
+    p=head;
+    while(index--){
+        p=p->right;
+    }
+    prev_node=p->left->left;
+    p->left=prev_node;
+    prev_node->right=p;
+}
+struct node *nodeAtIndex(struct node *head,int data,int index){
+    ptr=(struct node*)malloc(sizeof(struct node));
+    ptr->data=data;
+    ptr->left=NULL;
+    ptr->right=NULL;
+    while(index--){
+        p=p->right;
+    }
+    ptr->right=p;
+    ptr->left=p->left;
+    p->left=ptr;
+    p=ptr->left;
+    p->right=ptr;
+    return head;
 }
