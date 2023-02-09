@@ -1,170 +1,202 @@
-// #include <stdio.h>
-#include <iostream>
-using namespace std; 
-struct node
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX 10 // Macro defines maximum no. of elements in the list. It is a user defined data type
+struct
 {
-    int data;
-    struct node *next;
-};
+    int list[MAX];
+    int element;     //new element to be inserted
+    int pos;           //position of the element to be inserted or deleted
+    int length;     //total no of elements
+} l;
+// enum boolean
+// {
+//     true, false
+// } boolean;        //function prototypes
 
-struct node *create(int n,struct node *head);
-void printf_list(struct node *temp);
-struct node * insert_first(struct node* head, int data);
-struct node *nodeAtEnd(struct node *head,int data);
-struct node *nodeAtIndex(struct node *head,int data,int index);
-void delete_node(struct node *head,int index);
-int data_finder(struct node *head,int x);
-struct node* reverseList(struct node *head);
+int menu(void);           //This function displays the list of operations
+void create(void);       //This function creates initial set of elements
+void insert(int, int);    //This function inserts the element at specified position
+void delet(int);       //This function deletes the element at given position
+void find(int);        //This function finds the position of the given element, if exists
+void display(void);       //This function displays the elements in the list
+bool islistfull(void);  //This function checks whether the list is full or not boolean
+bool islistempty(void);        //This function checks whether the list is empty or not
 
+void main()
+{
+    int ch;
+    int element;
+    int pos;
+    l.length = 0;
+    while(1)
+    {
+        ch = menu();
+        switch (ch)
+        {
+             case 1:   l.length = 0;
+             create();
+             break;
+             case 2:
+             if (islistfull() != true)
+             {
+                  printf("Enter New element: ");
+                  scanf("%d", &element);
+                  printf("Enter the Position : ");
+                  scanf("%d", &pos);
+                  insert(element, pos);
+             }
+             else
+             {
+                  printf("List is Full. Cannot insert the element");
+                  printf("\n Press any key to continue...");
+                //   getch();
+             }
+             break;
+             case 3:
+             if (islistempty() != true)
+             {
+                  printf("Enter the position of element to be deleted : ");
+                  scanf("%d", &pos);
+                  delet(pos);
+             }
+             else
+             {
+                  printf("List is Empty.");
+                  printf("\n Press any key to continue...");
+                //   getch();
+             }
+             break;
+             case 4:
+             printf("No of elements in the list is %d", l.length);
+             printf("\n Press any key to continue...");
+            //  getch();
+             break;
+             case 5:
+             printf("Enter the element to be searched : ");
+             scanf("%d", &element);
+             find(element);
+             break;
+             case 6:
+             display();
+             break;
+             case 7:
+             printf("Exit");
+             exit(0);
+             break;
+             default:  printf("Invalid Choice");
+             printf("\n Press any key to continue...");
+             
+        }
+    }
+}        //function to display the list of elements
+int menu()
+{
+    int ch;
+    //clrscr();
+    printf("1. Create\n2. Insert\n3. Delete\n4. Count\n5. Find\n6. Display\n7.Exit\n\n Enter your choice : ");
+    scanf("%d", &ch);
+    printf("\n\n");
+    return ch;
+}      
+void create(void)
+{
+    int element;
+    int flag=1;
+    while(flag==1)
+    {
+        printf("Enter element : ");
+        scanf("%d", &element);
+        l.list[l.length] = element;
+        l.length++;
+        printf("To insert another element press '1' : ");
+        scanf("%d", &flag);
+    }
+}     
+void display(void)
+{
+    int i;
+    for (i=0; i<l.length; i++)
+        printf("Element %d : %d \n", i+1, l.list[i]);
+    printf("Press any key to continue...");
+    // getch();
+}  
+void insert(int element, int pos)
+{
+    int i;
+    if (pos == 0)
+    {
+        printf("\nCannot insert an element at 0th position");
+        return;
+    }
 
-int main(){
-    int n;
-    struct node* head;
-    head=(struct node*)malloc(sizeof(struct node));
-    printf("Enter no. of nodes you want in a list.");
-    scanf("%d",&n);
-
-    create(n,head);
-
-    printf_list(head);
-
-    // nodeAtEnd(head,n);
-    // printf("\n\n\n\n");
-    // printf_list(head);
-
-    head=nodeAtIndex(head,876,3);
-    printf("\n\n\n\n");
-    printf_list(head);
-
-    head=insert_first(head,876);
-    printf("\n\n\n\n");
-    printf_list(head);
-
-    delete_node(head,3);       //indexing starts from 1 not 0
-    printf("\n\n\n\n");
-    printf_list(head);
-
-    // data finder
-    int x;
-    printf("Enter the data you want to find");
-    scanf("%d",&x);
-    int finder=data_finder(head,x);
-    if(finder==0)
-        printf("Data doesn't exist in the LL.");
+    if (pos-1 > l.length)
+    {
+        printf("\nOnly %d elements exit. Cannot insert at %d position", l.length, pos);
+        printf("\n Press any key to continue...");
+    }
     else
-        printf("Data exist in the LL.");
-    return 0;
-}
-
-
-
-struct node *create(int n,struct node*head){
-    struct node*p;
-    p=head;
-    for(int i=0;i<n;i++){
-        int x;
-        printf("Enter data");
-        scanf("%d",&x);
-        p->data=x;
-        p->next=(struct node*)malloc(sizeof(struct node));
-        p=p->next;
-        p->next=NULL;
+    {
+        for (i=l.length; i>=pos-1; i--)
+        {
+            l.list[i+1] = l.list[i];
+        }
+        l.list[pos-1] = element;
+        l.length++;
     }
-    head=p;
-    return head;
-}
-
-
-
-void printf_list(struct node *temp){
-    int i=1;
-    while(temp->next!=0){
-        printf("\nData at node no. %d  %d \n",i,temp->data);
-        temp=temp->next;
-        i++;
+}     
+void delet(int pos)
+{
+    int i;
+    if(pos == 0)
+    {
+        printf("\nCannot delete at an element 0th position");
+        return;
     }
-}
-
-
-
-struct node * insert_first(struct node* head, int data){
-    struct node* ptr=(struct node*)malloc(sizeof(struct node));
-    ptr->next=head;
-    ptr->data=data;
-    return ptr;
-}
-
-
-
-struct node *nodeAtEnd(struct node *head,int data){
-    struct node* ptr=(struct node*)malloc(sizeof(struct node));
-    ptr->data=data;
-    ptr->next=NULL;
-    struct node* p=head;
-    while(p->next!=NULL){
-        p=p->next;
+    if (pos > l.length)
+    {
+        printf("\n\n Only %d elements exit. Cannot delete", l.length, pos);
+        printf("\n Press any key to continue...");
+        return;
     }
-    p->next=ptr;
-    // return head;
-}
-
-
-
-struct node *nodeAtIndex(struct node *head,int data,int index){
-    struct node* ptr=(struct node*)malloc(sizeof(struct node));
-    struct node* p=head;
-    int i=0;
-    while(i!=index-2){
-        p=p->next;
-        i++;
+    for (i=pos-1; i<l.length; i++)
+    {
+        l.list[i] = l.list[i+1];
     }
-    ptr->next=p->next;
-    ptr->data=data;
-    p->next=ptr;
-    return head;
-}
-void delete_node(struct node *head,int index){
-    struct node* p=head;
-    int i=1;
-    while(i!=index-1){
-        p=p->next;
-        i++;
-    }
-    p->next=p->next->next;
-    return ;
-}
+    l.length--;
+}      
+void find(int element)
+{
+    int i;
+    int flag = 1;
 
-int data_finder(struct node *head,int x){
-    struct node *p;
-    p=head;
-    int i=1;
-    int found=0;
-    while(p!=NULL){
-        if(p->data==x){
-            found=1;
+    for (i=0; i<l.length; i++)
+    {
+        if(l.list[i] == element)
+        {
+            printf ("%d exists at %d position",element, i+1);
+            flag = 0;
+            printf("\n Press any key to continue...");
             break;
         }
-        p=p->next;
-        i++;
     }
-    return found;
-}
-
-struct node* reverseList(struct node *head)
+    if(flag)
     {
-        // code here
-        struct node *pre,*cur,*nex;
-        pre=NULL;
-        cur=head;
-        nex=head;
-        while(nex!=NULL){
-            nex=nex->next;
-            cur->next=pre;
-            pre=cur;
-            cur=nex;
-        }
-        head=pre;
-        return head;
-        
-        // return head of reversed list
+        printf("Element not found.\n Press any key to continue...");
     }
+}  
+
+bool islistfull(void)
+{
+    if (l.length == MAX)
+        return true;
+    else
+        return false;
+}   
+
+bool islistempty(void)
+{
+    if (l.length == 0)
+        return true;
+    else
+        return false;
+}
