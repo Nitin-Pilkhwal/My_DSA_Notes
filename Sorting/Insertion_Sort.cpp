@@ -2,7 +2,7 @@
 using namespace std;
 
 
-void main(){
+int main(){
     int i,j,n;
     cout<<"enter the limit of an array";
     cin>>n;
@@ -15,12 +15,21 @@ void main(){
     for (i=0;i<n;i++){
         cout<<arr[i]<<" ";
     }
-    for (i=1;i<n;i++){
-        int temp=arr[i];
-        for(j=i-1;j>=0;j--){
-            if (arr[j]>temp){
-                arr[j+1]=arr[j];
-                }
+        int key, j;
+    for (i = 1; i < n; i++)
+    {
+        key = arr[i];
+        j = i - 1;
+        while (j >= 0 && arr[j] > key)
+        {
+            arr[j + 1] = arr[j];
+            j = j - 1;
         }
+        arr[j + 1] = key;
     }
+    cout<<"array after sorting";
+    for (i=0;i<n;i++){
+        cout<<arr[i]<<" ";
+    }
+    return 0;
 }
