@@ -8,10 +8,10 @@ int merge(int a[],int l,int m,int r){
 
     int L[n1],R[n2];
 
-    for(i=0;i<l;i++)
+    for(i=0;i<n1;i++)
         L[i] = a[l + i];
-    for(j=0;j<l;j++)
-        R[i] = a[m+1 + j];
+    for(j=0;j<n2;j++)
+        R[j] = a[m+1 + j];
     
     i=0,j=0,k=l;
 
